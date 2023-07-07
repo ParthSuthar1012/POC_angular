@@ -1,31 +1,37 @@
-<div style="margin-top: 5rem;">
-    <form class="grid">
-        <mat-form-field>
+<!-- <div style="margin-top: 5rem;">
+    <form class="grid" [formGroup]="inputForm">
+        <mat-form-field appearance="outline">
             <mat-label>Input Type</mat-label>
-            <mat-select>
+            <mat-select formControlName="inputtype">
               <mat-option *ngFor="let item of types" [value]="item.value">
                 {{item.value}}
               </mat-option>
             </mat-select>
+            <mat-error *ngIf="k['inputtype'].errors?.['required']"
+            >inputtype is required</mat-error
+          >
           </mat-form-field> 
 
-          <mat-form-field>
+          <mat-form-field appearance="outline">
             <mat-label>Required</mat-label>
-            <mat-select>
+            <mat-select formControlName="required">
               <mat-option value="Yes" >Yes</mat-option>
               <mat-option value="No" >No</mat-option>
             </mat-select>
+            <mat-error *ngIf="k['required'].errors?.['required']"
+            > Select This </mat-error
+          >
           </mat-form-field> 
 
-          <mat-form-field>
+          <mat-form-field appearance="outline">
             <mat-label>Pattern</mat-label>
-            <mat-select>
+            <mat-select formControlName="pattern">
               <mat-option value="^\d+$" >only number</mat-option>
               <mat-option value="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" >Email</mat-option>
               <mat-option value="^[a-zA-Z]+$" >only alphabet</mat-option>
             </mat-select>
           </mat-form-field>
-   
+       <button mat-raised-button color="primary" (click)="submit()" >Submit</button>
     </form>
         
-</div>
+</div> -->
