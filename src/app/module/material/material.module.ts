@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import {MatFormFieldModule } from '@angular/material/form-field'
 import { MatInputModule } from '@angular/material/input'
 import { MatCardModule } from '@angular/material/card'
-
+import {MatSelectModule} from '@angular/material/select';
 @NgModule({
   declarations: [],
   imports: [
@@ -12,7 +12,8 @@ import { MatCardModule } from '@angular/material/card'
   exports: [
     MatFormFieldModule,
     MatInputModule,
-    MatCardModule
+    MatCardModule,
+    MatSelectModule
   ]
 })
 export class MaterialModule { }

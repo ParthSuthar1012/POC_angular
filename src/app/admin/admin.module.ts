@@ -3,8 +3,7 @@ import { CommonModule } from '@angular/common';
 import { AdminRoutingModule } from './admin-routing.module';
 import { AdminComponent } from './admin.component';
 import { MaterialModule } from '../module/material/material.module';
-
-
+import { FormsModule,ReactiveFormsModule } from '@angular/forms'
 @NgModule({
   declarations: [
     AdminComponent
@@ -12,7 +11,9 @@ import { MaterialModule } from '../module/material/material.module';
   imports: [
     CommonModule,
     AdminRoutingModule,
-    MaterialModule
+    MaterialModule,
+    FormsModule,
+    ReactiveFormsModule
   ]
 })
 export class AdminModule { }

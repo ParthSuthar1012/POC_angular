@@ -1,5 +1,31 @@
-<div>
-    <mat-card>
+<div style="margin-top: 5rem;">
+    <form class="grid">
+        <mat-form-field>
+            <mat-label>Input Type</mat-label>
+            <mat-select>
+              <mat-option *ngFor="let item of types" [value]="item.value">
+                {{item.value}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field> 
+
+          <mat-form-field>
+            <mat-label>Required</mat-label>
+            <mat-select>
+              <mat-option value="Yes" >Yes</mat-option>
+              <mat-option value="No" >No</mat-option>
+            </mat-select>
+          </mat-form-field> 
+
+          <mat-form-field>
+            <mat-label>Pattern</mat-label>
+            <mat-select>
+              <mat-option value="^\d+$" >only number</mat-option>
+              <mat-option value="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" >Email</mat-option>
+              <mat-option value="^[a-zA-Z]+$" >only alphabet</mat-option>
+            </mat-select>
+          </mat-form-field>
+   
+    </form>
         
-    </mat-card>
 </div>

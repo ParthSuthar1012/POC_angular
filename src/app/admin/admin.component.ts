@@ -7,4 +7,11 @@ import { Component } from '@angular/core';
 })
 export class AdminComponent {
 
+  types: any = [
+    {value: 'text'},
+    {value: 'radio' },
+    {value: 'password'},
+    {value: 'email'},
+    {value: 'checkbox'},
+  ];
 }
