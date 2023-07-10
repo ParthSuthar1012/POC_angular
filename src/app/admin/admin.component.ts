@@ -1,25 +1,24 @@
-import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { Component, OnInit, inject } from '@angular/core';
 import {
   AbstractControl,
+  FormArray,
   FormBuilder,
-  FormControl,
   FormGroup,
+  ValidatorFn,
   Validators,
 } from '@angular/forms';
-import { MatChipInputEvent } from '@angular/material/chips';
 import { ServiceService } from '../service/service.service';
 
 @Component({
   selector: 'app-admin',
   template: `
-    <div style="margin-top: 5rem;">
+    <div style="margin-top: 5rem; width: 450px">
       <form class="grid" [formGroup]="inputForm">
         <mat-form-field appearance="outline">
           <mat-label>Input Type</mat-label>
           <mat-select formControlName="inputType">
             <mat-option *ngFor="let item of types" [value]="item.value">
-              {{ item.value }}
+              {{ item.displayValues }}
             </mat-option>
           </mat-select>
           <mat-error *ngIf="k['inputType'].errors?.['required']">
@@ -47,7 +46,9 @@ import { ServiceService } from '../service/service.service';
         >
           <mat-label>Pattern</mat-label>
           <mat-select formControlName="pattern">
-            <mat-option value="^d+$">only number</mat-option>
+            <mat-option value="">--</mat-option>
+            <mat-option value="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}">Password</mat-option>
+            <mat-option value="[0-9]+$">only number</mat-option>
             <mat-option value="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$"
               >Email</mat-option
             >
@@ -55,31 +56,42 @@ import { ServiceService } from '../service/service.service';
           </mat-select>
         </mat-form-field>
 
-        <mat-form-field
-          appearance="outline"
+        <mat-form-field appearance="outline">
+          <mat-label>Label</mat-label>
+          <input matInput placeholder="Label" formControlName="label" />
+          <mat-error *ngIf="k['label'].errors?.['required']">
+            Label is required
+          </mat-error>
+        </mat-form-field>
+
+        <div class="flex"   appearance="outline"
           *ngIf="
             k['inputType'].value === 'radio' ||
             k['inputType'].value === 'checkbox'
-          "
-        >
-          <mat-label>Labels</mat-label>
-          <mat-chip-grid #chipGrid aria-label="Enter keywords">
-            <mat-chip-row
-              *ngFor="let keyword of keywords"
-              (removed)="removeKeyword(keyword)"
-            >
-              {{ keyword }}
-              <button matChipRemove aria-label="'remove ' + keyword">
-                <mat-icon>cancel</mat-icon>
-              </button>
-            </mat-chip-row>
-          </mat-chip-grid>
-          <input
-            placeholder="New Lable..."
-            [matChipInputFor]="chipGrid"
-            (matChipInputTokenEnd)="add($event)"
-          />
-        </mat-form-field>
+          " formGroupName="subitems">
+          <mat-form-field style="width: 140px;" appearance="outline">
+            <mat-label>Name</mat-label>
+            <input matInput placeholder="Name" formControlName="name" />
+            <mat-error *ngIf="k['subitems'].get('name')?.errors?.['required']">
+              Name is required
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field style="width: 140px;" appearance="outline">
+            <mat-label>Id</mat-label>
+            <input matInput placeholder="Id" formControlName="subId" />
+            <mat-error *ngIf="k['subitems'].get('subId')?.errors?.['required']">
+              Name is required
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field style="width: 140px;" appearance="outline">
+            <mat-label>Value</mat-label>
+            <input matInput placeholder="Value" formControlName="value" />
+            <mat-error *ngIf="k['subitems'].get('value')?.errors?.['required']">
+              Name is required
+            </mat-error>
+          </mat-form-field>
+        </div>
 
         <button mat-raised-button color="primary" (click)="submit()">
           Submit
@@ -93,62 +105,62 @@ import { ServiceService } from '../service/service.service';
 export class AdminComponent implements OnInit {
   inputForm!: FormGroup;
   types: any = [
-    { value: 'text' },
-    { value: 'radio' },
-    { value: 'password' },
-    { value: 'email' },
-    { value: 'checkbox' },
+    { value: 'text', displayValues: 'text' },
+    { value: 'radio', displayValues: 'radio' },
+    { value: 'password', displayValues: 'password' },
+    { value: 'email', displayValues: 'email' },
+    { value: 'checkbox', displayValues: 'checkbox' },
   ];
-  keywords: any = [];
-  formControl = new FormControl(['']);
-  announcer = inject(LiveAnnouncer);
-  constructor(public fb: FormBuilder, public service:ServiceService) {}
+  validators: any = [];
+  constructor(public fb: FormBuilder, public service: ServiceService) {}
 
   ngOnInit(): void {
     this.inputForm = this.fb.group({
       inputType: ['', [Validators.required]],
       required: ['', [Validators.required]],
       pattern: [''],
-      keywords: [this.keywords]
+      label: ['', [Validators.required]],
+      subitems: this.fb.group({
+        name: [''],
+        subId: [''],
+        value: [''],
+      }),
     });
-    this.Getall()
+    const inputTypeControl = this.inputForm.get('inputType');
+
+    inputTypeControl?.valueChanges.subscribe((value) => {
+      const subitems = this.inputForm.get('subitems');
+
+      if (value === 'radio' || value === 'checkbox') {
+        subitems?.get('name')?.setValidators([Validators.required]);
+        subitems?.get('subId')?.setValidators([Validators.required]);
+        subitems?.get('value')?.setValidators([Validators.required]);
+      } else {
+        subitems?.get('name')?.clearValidators();
+        subitems?.get('subId')?.clearValidators();
+        subitems?.get('value')?.clearValidators();
+      }
+
+      subitems?.get('name')?.updateValueAndValidity();
+      subitems?.get('subId')?.updateValueAndValidity();
+      subitems?.get('value')?.updateValueAndValidity();
+    });
   }
 
   get k(): { [key: string]: AbstractControl } {
     return this.inputForm.controls;
   }
 
-  removeKeyword(keyword: any) {
-    const index = this.keywords.indexOf(keyword);
-    if (index >= 0) {
-      this.keywords.splice(index, 1);
-
-      this.announcer.announce(`removed ${keyword}`);
-    }
-  }
-  add(event: MatChipInputEvent): void {
-    const value = (event.value || '').trim();
-
-    if (value) {
-      this.keywords.push(value);
-    }
-    console.log(this.keywords);
-    event.chipInput!.clear();
-  }
-
   submit() {
-    if ( this.inputForm.valid) {
-         this.service.create(this.inputForm.value).subscribe(res => {
-          console.log(res);
-          this.inputForm.reset()
-         })
+    if (this.inputForm.valid) {
+      const formValue = { ...this.inputForm.value };
+      this.service.create(formValue).subscribe((res) => {
+        console.log(res);
+        this.inputForm.reset();
+      });
+      console.log(formValue);
+    } else {
+      console.log('Invalid form');
     }
-    console.log(this.inputForm.value)
-  }
-
-  Getall() {
-    this.service.getAll().subscribe(res => {
-      console.table(res)
-    })
   }
 }
