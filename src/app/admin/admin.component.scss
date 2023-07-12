@@ -1,9 +1,17 @@
 .grid {
     display: grid;
     gap: 0.5rem;
+    
 } 
 
 .flex {
     display: flex;
     gap: 0.5rem;
+   flex-wrap: wrap;
+   max-width: 500px;
+} 
+
+
+.margin-top {
+  margin-top: 0.2rem;
 }

@@ -1,1 +1,59 @@
-<p>client works!</p>
+<form [formGroup]="testform">
+
+
+    <div *ngFor="let item of data; let i = index">
+
+        <div *ngIf="
+          item.inputType === 'text' ||
+          item.inputType === 'email' ||
+          item.inputType === 'password'
+        ">
+            <label for="{{ subitem[i]?.subId }}">{{ item.label }}:</label>
+            <input type="{{ item?.inputType }}" [formControlName]="item?.label" />
+
+        </div>
+
+        <div *ngIf="item.inputType == 'select'">
+            <label [for]="subitem[i].name">{{ item?.label }}</label><br />
+            <select [name]="subitem[i].name" [id]="subitem[i].subId" [formControlName]="item?.label">
+                <option *ngFor="let option of subitem[i]?.options" [value]="option.value">
+                    {{ option.displayValue }}
+                </option>
+            </select>
+        </div>
+        <div *ngIf="item.inputType == 'button'">
+            <button>{{item?.label}}</button>
+        </div>
+
+        <input *ngIf="item.inputType == 'radio'" type="radio" [value]="subitem[i].value" [name]="subitem[i]?.name"
+            [id]="subitem[i]?.subId" [formControlName]="subitem[i]?.name" />
+
+        <input *ngIf="item.inputType == 'checkbox'" type="checkbox" [value]="subitem[i].value" [name]="subitem[i]?.name"
+            [id]="subitem[i]?.subId" [formControlName]="subitem[i]?.name" />
+
+        <label *ngIf="item.inputType === 'radio' || item.inputType === 'checkbox'" [for]="subitem[i]?.value">{{
+            item.label }}</label>
+        <div *ngIf=" item.inputType != 'radio' &&
+          item.inputType != 'checkbox' ">
+            <mat-error *ngIf="isControlInvalid(item?.label)">
+                <ng-container *ngIf="testform.get(item?.label)?.errors?.['required']">
+                    {{ item?.label }} is required
+                </ng-container>
+                <ng-container *ngIf="testform.get(item?.label)?.errors?.['pattern']">
+                    Invalid pattern
+                </ng-container>
+            </mat-error>
+        </div>
+
+        <div *ngIf=" item.inputType == 'radio' ||
+          item.inputType == 'checkbox' ">
+            <mat-error *ngIf="isControlInvalid(subitem[i].name)">
+                <ng-container *ngIf="testform.get(subitem[i].name)?.errors?.['required']">
+                    {{ subitem[i].name }} is required
+                </ng-container>
+
+            </mat-error>
+        </div>
+    </div>
+    <button (click)="submit()">Submit</button>
+</form>
