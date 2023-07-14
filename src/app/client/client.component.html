@@ -14,7 +14,7 @@
         </div>
 
         <div *ngIf="item.inputType == 'select'">
-            <label [for]="subitem[i].name">{{ item?.label }}</label><br />
+            <label [for]="subitem[i].name">{{ item?.label }}:  </label>
             <select [name]="subitem[i].name" [id]="subitem[i].subId" [formControlName]="item?.label">
                 <option *ngFor="let option of subitem[i]?.options" [value]="option.value">
                     {{ option.displayValue }}

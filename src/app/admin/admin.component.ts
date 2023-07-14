@@ -27,7 +27,10 @@ import { Router } from '@angular/router';
           </mat-error>
         </mat-form-field>
 
-        <mat-form-field appearance="outline">
+        <mat-form-field    *ngIf="
+            k['inputType'].value !== 'radio' &&
+            k['inputType'].value !== 'checkbox' && k['inputType'].value !== 'button'
+          " appearance="outline">
           <mat-label>Required</mat-label>
           <mat-select formControlName="required">
             <mat-option value="Yes">Yes</mat-option>
@@ -42,7 +45,7 @@ import { Router } from '@angular/router';
           appearance="outline"
           *ngIf="
             k['inputType'].value !== 'radio' &&
-            k['inputType'].value !== 'checkbox' && k['inputType'].value !== 'select'
+            k['inputType'].value !== 'checkbox' && k['inputType'].value !== 'select' && k['inputType'].value !== 'button' 
           "
         >
           <mat-label>Pattern</mat-label>
@@ -172,11 +175,13 @@ console.log(this.types)
       if (value === 'select') {
         this.addOption()
       }
-     if ( value === 'button') {
+     if ( value === 'button' || value === 'radio' || value === 'checkbox') {
        this.inputForm?.get('required')?.clearValidators();
        this.inputForm?.get('required')?.updateValueAndValidity();
-      
          
+     } else {
+      this.inputForm?.get('required')?.setValidators([Validators.required]);
+       this.inputForm?.get('required')?.updateValueAndValidity();
      }
 
       if (value === 'radio' || value === 'checkbox') {
