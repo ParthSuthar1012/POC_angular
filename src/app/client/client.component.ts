@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ServiceService } from '../service/service.service';
 import {
   AbstractControl,
+  FormArray,
   FormBuilder,
   FormControl,
   FormGroup,
@@ -11,13 +12,121 @@ import {
 
 @Component({
   selector: 'app-client',
-  templateUrl: './client.component.html',
+  // templateUrl: './client.component.html',
+  template: `
+    <form [formGroup]="testform">
+      <div *ngFor="let item of data; let i = index">
+        <div
+          *ngIf="
+            item.inputType === 'text' ||
+            item.inputType === 'email' ||
+            item.inputType === 'password'
+          "
+        >
+          <label for="{{ subitem[i]?.subId }}">{{ item.label }}:</label>
+          <input type="{{ item?.inputType }}" [formControlName]="item?.label" />
+        </div>
+
+        <div *ngIf="item.inputType == 'select'">
+          <label [for]="subitem[i].name">{{ item?.label }}: </label>
+          <select
+            [name]="subitem[i].name"
+            [id]="subitem[i].subId"
+            [formControlName]="item?.label"
+          >
+            <option
+              *ngFor="let option of subitem[i]?.options"
+              [value]="option.value"
+            >
+              {{ option.displayValue }}
+            </option>
+          </select>
+        </div>
+
+        <div *ngIf="item.inputType == 'multipleSelect'">
+          <!-- <ng-select [items]="dropdownvlaues" [selectableGroup]="true" [multiple]="true"  bindLabel="value" [closeOnSelect]="false"    bindValue="displayvalue" [formControlName]="item?.label" >
+   <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+        <input id="item-{{index}}" type="checkbox" /> {{item.name}}
+    </ng-template>
+   </ng-select> -->
+          <!-- <p>subitem[i]?.options?.displayValue</p>
+   <p>subitem[i]?.options?.value</p> -->
+
+          <mat-form-field>
+            <mat-label>{{ item?.label }}</mat-label>
+            <mat-select multiple [formControlName]="item?.label">
+              <mat-option
+                *ngFor="let dv of subitem[i]?.options"
+                [value]="dv?.value"
+                >{{ dv.displayValue }}</mat-option
+              >
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div *ngIf="item.inputType == 'button'">
+          <button>{{ item?.label }}</button>
+        </div>
+
+        <input
+          *ngIf="item.inputType == 'radio'"
+          type="radio"
+          [value]="subitem[i].value"
+          [name]="subitem[i]?.name"
+          [id]="subitem[i]?.subId"
+          [formControlName]="subitem[i]?.name"
+        />
+
+        <input
+          *ngIf="item.inputType == 'checkbox'"
+          type="checkbox"
+          [value]="subitem[i].value"
+          [name]="subitem[i]?.name"
+          [id]="subitem[i]?.subId"
+          [formControlName]="subitem[i]?.name"
+        />
+
+        <label
+          *ngIf="item.inputType === 'radio' || item.inputType === 'checkbox'"
+          [for]="subitem[i]?.value"
+          >{{ item.label }}</label
+        >
+        <div *ngIf="item.inputType != 'radio' && item.inputType != 'checkbox'">
+          <mat-error *ngIf="isControlInvalid(item?.label)">
+            <ng-container
+              *ngIf="testform.get(item?.label)?.errors?.['required']"
+            >
+              {{ item?.label }} is required
+            </ng-container>
+            <ng-container
+              *ngIf="testform.get(item?.label)?.errors?.['pattern']"
+            >
+              Invalid pattern
+            </ng-container>
+          </mat-error>
+        </div>
+
+        <div *ngIf="item.inputType == 'radio' || item.inputType == 'checkbox'">
+          <mat-error *ngIf="isControlInvalid(subitem[i].name)">
+            <ng-container
+              *ngIf="testform.get(subitem[i].name)?.errors?.['required']"
+            >
+              {{ subitem[i].name }} is required
+            </ng-container>
+          </mat-error>
+        </div>
+      </div>
+      <button (click)="submit()">Submit</button>
+    </form>
+  `,
   styleUrls: ['./client.component.scss'],
 })
 export class ClientComponent implements OnInit {
   data: any;
-  subitem: any = [];
 
+  subitem: any = [];
+  selectedPeople = [];
+  controlname: any;
   testform!: FormGroup;
 
   constructor(public service: ServiceService, public fb: FormBuilder) {}
@@ -38,11 +147,9 @@ export class ClientComponent implements OnInit {
       for (const response of this.data) {
         const subitems = JSON.parse(response.subitems);
         this.subitem.push(subitems);
-
-     
       }
       console.log('subitems', this.subitem);
-  
+
       this.data.forEach((item: any) => {
         const controlValidators = [];
 
@@ -57,12 +164,17 @@ export class ClientComponent implements OnInit {
         }
 
         if (item.inputType == 'radio' || item.inputType == 'checkbox') {
-          const control = new FormControl('', controlValidators);
-
-          const subitems1 = JSON.parse(item.subitems);
-
-          // console.log(subitems1.name);
-          this.testform.addControl(subitems1.name, control);
+          if (item.inputType === 'checkbox') {
+            const control = new FormControl(false, controlValidators);
+            const subitems1 = JSON.parse(item.subitems);
+            this.controlname = subitems1.name;
+            this.testform.addControl(subitems1.name, control);
+          } else {
+            const control = new FormControl('', controlValidators);
+            const subitems1 = JSON.parse(item.subitems);
+            // console.log(subitems1.name);
+            this.testform.addControl(subitems1.name, control);
+          }
         } else {
           const control = new FormControl('', controlValidators);
           this.testform.addControl(item.label, control);
@@ -77,12 +189,16 @@ export class ClientComponent implements OnInit {
       : false;
   }
 
+
+
   submit() {
-    // if(this.testform.valid){
-      console.log(this.testform.value);
-      // }
-      // else{
-      //   console.log("invalid");
-      // }
+    if(this.testform.valid){
+    console.log(this.testform.value);
+  
     }
+  
+    else{
+      console.log("invalid");
+    }
+  }
 }

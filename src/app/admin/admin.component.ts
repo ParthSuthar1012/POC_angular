@@ -71,7 +71,7 @@ import { Router } from '@angular/router';
         <div class="flex"   appearance="outline"
           *ngIf="
             k['inputType'].value === 'radio' ||
-            k['inputType'].value === 'checkbox' || k['inputType'].value === 'select'
+            k['inputType'].value === 'checkbox' || k['inputType'].value === 'select' ||  k['inputType'].value === 'multipleSelect'
           " formGroupName="subitems">
           <mat-form-field style="width: 140px;" appearance="outline">
             <mat-label>Name</mat-label>
@@ -88,7 +88,7 @@ import { Router } from '@angular/router';
               Name is required
             </mat-error>
           </mat-form-field>
-          <mat-form-field *ngIf=" k['inputType'].value !== 'select'"  style="width: 140px;" appearance="outline">
+          <mat-form-field *ngIf=" k['inputType'].value !== 'select' && k['inputType'].value !== 'multipleSelect'"  style="width: 140px;" appearance="outline">
             <mat-label>Value</mat-label>
             <input matInput placeholder="Value" formControlName="value" />
             <mat-error *ngIf="k['subitems'].get('value')?.errors?.['required']">
@@ -98,7 +98,7 @@ import { Router } from '@angular/router';
           
         </div> 
 
-        <div *ngIf="  k['inputType'].value === 'select'" formGroupName="subitems">
+        <div *ngIf="  k['inputType'].value === 'select' || k['inputType'].value === 'multipleSelect' " formGroupName="subitems">
           <div class="flex" formArrayName="options">
             <div class="grid" *ngFor="let optionControl of options.controls; let i = index" [formGroupName]="i">
               <mat-form-field style="width: 140px;" appearance="outline">
@@ -145,6 +145,7 @@ export class AdminComponent implements OnInit {
     { value: 'email', displayValues: 'email' },
     { value: 'checkbox', displayValues: 'checkbox' },
     {value:'select', displayValues: 'dropdown'},
+    {value:'multipleSelect', displayValues: 'dropdown(Multiple Select)'},
     { value : 'button' , displayValues: 'button'}
   ];
   validators: any = [];
@@ -172,7 +173,7 @@ console.log(this.types)
     inputTypeControl?.valueChanges.subscribe((value) => {
       const subitems = this.inputForm.get('subitems');
 
-      if (value === 'select') {
+      if (value === 'select' || value === 'multipleSelect') {
         this.addOption()
       }
      if ( value === 'button' || value === 'radio' || value === 'checkbox') {
@@ -195,7 +196,7 @@ console.log(this.types)
         subitems?.get('value')?.clearValidators();
       }
 
-      if (value === 'select') {
+      if (value === 'select' || value === 'multipleSelect') {
         subitems?.get('name')?.setValidators([Validators.required]);
         subitems?.get('subId')?.setValidators([Validators.required]);
       }

@@ -1,4 +1,4 @@
-<form [formGroup]="testform">
+<!-- <form [formGroup]="testform">
 
 
     <div *ngFor="let item of data; let i = index">
@@ -28,7 +28,7 @@
         <input *ngIf="item.inputType == 'radio'" type="radio" [value]="subitem[i].value" [name]="subitem[i]?.name"
             [id]="subitem[i]?.subId" [formControlName]="subitem[i]?.name" />
 
-        <input *ngIf="item.inputType == 'checkbox'" type="checkbox" [value]="subitem[i].value" [name]="subitem[i]?.name"
+        <input *ngIf="item.inputType == 'checkbox'" type="checkbox" [value]="subitem[i].value"   (change)="onCheckboxChange($event)" [name]="subitem[i]?.name"
             [id]="subitem[i]?.subId" [formControlName]="subitem[i]?.name" />
 
         <label *ngIf="item.inputType === 'radio' || item.inputType === 'checkbox'" [for]="subitem[i]?.value">{{
@@ -56,4 +56,4 @@
         </div>
     </div>
     <button (click)="submit()">Submit</button>
-</form>
+</form> -->
