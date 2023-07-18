@@ -1,23 +1,26 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, Inject, OnInit, inject } from '@angular/core';
 import {
   AbstractControl,
   FormArray,
   FormBuilder,
+  FormControl,
   FormGroup,
   ValidatorFn,
   Validators,
 } from '@angular/forms';
 import { ServiceService } from '../service/service.service';
 import { Router } from '@angular/router';
+import { InputField } from '../model/input-field';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-admin',
   template: `
-    <div style="margin-top: 5rem; width: 450px">
+    <div style="margin-top: 5rem; width: 500px" class="dialogclass">
       <form class="grid" [formGroup]="inputForm">
         <mat-form-field appearance="outline">
           <mat-label>Input Type</mat-label>
-          <mat-select formControlName="inputType">
+          <mat-select formControlName="inputType"  >
             <mat-option *ngFor="let item of types" [value]="item.value">
               {{ item.displayValues }}
             </mat-option>
@@ -49,15 +52,20 @@ import { Router } from '@angular/router';
           "
         >
           <mat-label>Pattern</mat-label>
-          <mat-select formControlName="pattern">
-            <mat-option value="">--</mat-option>
+          <input type="text"
+           matInput
+           formControlName="pattern"
+           [matAutocomplete]="auto">
+          <mat-autocomplete  #auto="matAutocomplete" [displayWith]="displayPattern">
             <mat-option value="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}">Password</mat-option>
             <mat-option value="[0-9]+$">only number</mat-option>
             <mat-option value="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$"
               >Email</mat-option
             >
             <mat-option value="^[a-zA-Z]+$">only alphabet</mat-option>
-          </mat-select>
+            </mat-autocomplete>
+      
+
         </mat-form-field>
 
         <mat-form-field appearance="outline">
@@ -67,13 +75,22 @@ import { Router } from '@angular/router';
             Label is required
           </mat-error>
         </mat-form-field>
+    
+      
+        <mat-form-field  appearance="outline">
+            <mat-label>Id</mat-label>
+            <input matInput placeholder="Id" formControlName="Id" />
+            <mat-error *ngIf="k['subitems'].get('Id')?.errors?.['required']">
+              Id Is required
+            </mat-error>
+          </mat-form-field>
 
         <div class="flex"   appearance="outline"
-          *ngIf="
+          formGroupName="subitems">
+          <mat-form-field  *ngIf="
             k['inputType'].value === 'radio' ||
             k['inputType'].value === 'checkbox' || k['inputType'].value === 'select' ||  k['inputType'].value === 'multipleSelect'
-          " formGroupName="subitems">
-          <mat-form-field style="width: 140px;" appearance="outline">
+          " style="width: 140px;" appearance="outline">
             <mat-label>Name</mat-label>
             <input matInput placeholder="Name" formControlName="name" />
             <mat-error *ngIf="k['subitems'].get('name')?.errors?.['required']">
@@ -81,26 +98,18 @@ import { Router } from '@angular/router';
             </mat-error>
           </mat-form-field>
 
+         
           <mat-form-field style="width: 140px;" appearance="outline">
-            <mat-label>Id</mat-label>
-            <input matInput placeholder="Id" formControlName="subId" />
-            <mat-error *ngIf="k['subitems'].get('subId')?.errors?.['required']">
-              Name is required
-            </mat-error>
-          </mat-form-field>
-          <mat-form-field *ngIf=" k['inputType'].value !== 'select' && k['inputType'].value !== 'multipleSelect'"  style="width: 140px;" appearance="outline">
-            <mat-label>Value</mat-label>
-            <input matInput placeholder="Value" formControlName="value" />
-            <mat-error *ngIf="k['subitems'].get('value')?.errors?.['required']">
-              Name is required
-            </mat-error>
+            <mat-label>Place Holder</mat-label>
+            <input matInput placeholder="place holder" formControlName="placeholder" />
+            
           </mat-form-field>
           
         </div> 
 
         <div *ngIf="  k['inputType'].value === 'select' || k['inputType'].value === 'multipleSelect' " formGroupName="subitems">
           <div class="flex" formArrayName="options">
-            <div class="grid" *ngFor="let optionControl of options.controls; let i = index" [formGroupName]="i">
+            <div class="flex" *ngFor="let optionControl of options.controls; let i = index" [formGroupName]="i">
               <mat-form-field style="width: 140px;" appearance="outline">
                 <mat-label>Value</mat-label>
                 <input matInput placeholder="Value" formControlName="value" />
@@ -137,6 +146,8 @@ import { Router } from '@angular/router';
   providers: [],
 })
 export class AdminComponent implements OnInit {
+
+  
   inputForm!: FormGroup;
   types: any = [
     { value: 'text', displayValues: 'text' },
@@ -149,22 +160,28 @@ export class AdminComponent implements OnInit {
     { value : 'button' , displayValues: 'button'}
   ];
   validators: any = [];
-  constructor(public fb: FormBuilder, public service: ServiceService, public router:Router) {}
+  inputField: InputField = {
+    type: ''
+  }
+  constructor(public fb: FormBuilder, public service: ServiceService, public router:Router,   @Inject(MAT_DIALOG_DATA) data : any,
+  private dialogRef : MatDialogRef<AdminComponent>) {
+       this.inputField.type = data.type;
+  }
 
   ngOnInit(): void {
     this.inputForm = this.fb.group({
-      inputType: ['', [Validators.required]],
+      inputType: [this.inputField.type, [Validators.required]],
       required: ['', [Validators.required]],
       pattern: [''],
       label: ['', [Validators.required]],
+      Id: ['', [Validators.required]],
       subitems: this.fb.group({
         name: [''],
-        subId: [''],
-        value: [''],
+        placeholder: [''],
         options: this.fb.array([]),
       }),
     });
-console.log(this.types)
+
 
 
 
@@ -187,24 +204,15 @@ console.log(this.types)
 
       if (value === 'radio' || value === 'checkbox') {
         subitems?.get('name')?.setValidators([Validators.required]);
-        subitems?.get('subId')?.setValidators([Validators.required]);
-        subitems?.get('value')?.setValidators([Validators.required]);
       }  
       else  {
         subitems?.get('name')?.clearValidators();
-        subitems?.get('subId')?.clearValidators();
-        subitems?.get('value')?.clearValidators();
       }
 
       if (value === 'select' || value === 'multipleSelect') {
         subitems?.get('name')?.setValidators([Validators.required]);
-        subitems?.get('subId')?.setValidators([Validators.required]);
       }
-
-    
       subitems?.get('name')?.updateValueAndValidity();
-      subitems?.get('subId')?.updateValueAndValidity();
-      subitems?.get('value')?.updateValueAndValidity();
     });
   }
 
@@ -226,20 +234,43 @@ console.log(this.types)
 
     removeOption(index: number): void {
     this.options.removeAt(index);
+  } 
+
+  displayPattern(value: string): string {
+    switch (value) {
+      case '(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}':
+        return 'Password';
+      case '[0-9]+$':
+        return 'Only number';
+      case '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$':
+        return 'Email';
+      case '^[a-zA-Z]+$':
+        return 'Only alphabet';
+        case '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$':
+          return 'Email';
+      default:
+        return '';
+    }
   }
+  
 
   submit() {
-   
+   if(this.inputForm.valid) {
+    // console.log('Submit',this.inputForm.value);
+    this.dialogRef.close(this.inputForm.value);
+   } else {
+    console.log("invalid input")
+   }
     
-    if (this.inputForm.valid) {
-      const formValue = { ...this.inputForm.value };
-      this.service.create(formValue).subscribe((res) => {
-        console.log(res);
-        this.router.navigate(['/client'])
-      });
-      console.log(formValue);
-    } else {
-      console.log('Invalid form');
-    }
+    // if (this.inputForm.valid) {
+    //   const formValue = { ...this.inputForm.value };
+    //   this.service.create(formValue).subscribe((res) => {
+    //     console.log(res);
+     
+    //   });
+    //   console.log(formValue);
+    // } else {
+    //   console.log('Invalid form');
+    // }
   }
 }

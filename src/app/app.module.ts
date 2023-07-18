@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { MaterialModule } from './module/material/material.module';
 import { BrowserAnimationsModule} from '@angular/platform-browser/animations'
 import { HttpClientModule } from '@angular/common/http';
-import { NgSelectModule } from '@ng-select/ng-select';
+
 
 @NgModule({
   declarations: [
@@ -18,7 +18,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
     MaterialModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    NgSelectModule
+   
   ],
 
   providers: [],

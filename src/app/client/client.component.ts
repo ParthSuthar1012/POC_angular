@@ -44,14 +44,6 @@ import {
         </div>
 
         <div *ngIf="item.inputType == 'multipleSelect'">
-          <!-- <ng-select [items]="dropdownvlaues" [selectableGroup]="true" [multiple]="true"  bindLabel="value" [closeOnSelect]="false"    bindValue="displayvalue" [formControlName]="item?.label" >
-   <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
-        <input id="item-{{index}}" type="checkbox" /> {{item.name}}
-    </ng-template>
-   </ng-select> -->
-          <!-- <p>subitem[i]?.options?.displayValue</p>
-   <p>subitem[i]?.options?.value</p> -->
-
           <mat-form-field>
             <mat-label>{{ item?.label }}</mat-label>
             <mat-select multiple [formControlName]="item?.label">
@@ -172,7 +164,6 @@ export class ClientComponent implements OnInit {
           } else {
             const control = new FormControl('', controlValidators);
             const subitems1 = JSON.parse(item.subitems);
-            // console.log(subitems1.name);
             this.testform.addControl(subitems1.name, control);
           }
         } else {
@@ -188,9 +179,6 @@ export class ClientComponent implements OnInit {
       ? control.invalid && (control.touched || control.dirty)
       : false;
   }
-
-
-
   submit() {
     if(this.testform.valid){
     console.log(this.testform.value);

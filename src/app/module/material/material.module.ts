@@ -5,8 +5,8 @@ import { MatInputModule } from '@angular/material/input'
 import { MatCardModule } from '@angular/material/card'
 import {MatSelectModule} from '@angular/material/select';
 import { MatButtonModule} from '@angular/material/button'
-import { MatChipsModule} from '@angular/material/chips'
 import { MatIconModule} from '@angular/material/icon'
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 @NgModule({
   declarations: [],
   imports: [
@@ -18,8 +18,8 @@ import { MatIconModule} from '@angular/material/icon'
     MatCardModule,
     MatSelectModule,
     MatButtonModule,
-    MatChipsModule,
-    MatIconModule
+    MatIconModule,
+    MatAutocompleteModule
   ]
 })
 export class MaterialModule { }

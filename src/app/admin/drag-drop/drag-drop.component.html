@@ -1,0 +1,43 @@
+<div class="example-container">
+    <h2>Form Elements</h2>
+    <div
+      cdkDropList
+      #todoList="cdkDropList"
+      [cdkDropListData]="todo"
+      [cdkDropListConnectedTo]="[doneList]"
+      class="example-list"
+      (cdkDropListDropped)="drop($event, todoList)"
+    >
+      <div class="example-box" *ngFor="let item of todo" cdkDrag>{{ item.type }}</div>
+    </div>
+  </div>
+  
+  <div class="example-container">
+    <h2>Done</h2>
+    <div
+      cdkDropList
+      #doneList="cdkDropList"
+      [cdkDropListData]="done"
+      [cdkDropListConnectedTo]="[todoList]"
+      class="example-list"
+      (cdkDropListDropped)="drop($event, doneList)"
+    >
+    <div *ngFor="let item of data; let i = index">
+       
+          <div
+          *ngIf="
+            item.inputType === 'text' ||
+            item.inputType === 'email' ||
+            item.inputType === 'password'
+          "
+        >
+     
+      <label >{{item.label}}</label>
+      <input type="text" [placeholder]="subitem[i].placeholder">
+        </div>
+       </div>
+    
+    </div>
+
+  </div>
+ 
