@@ -1,74 +1,77 @@
-/* input-field-dialog.component.css */
 
-/* Styling for the dialog container */
-.dialogclass {
-  max-width: 400px;
-  background-color: #f9f9f9;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
-  padding: 20px;
-}
+// .dialogclass {
+//   max-width: 400px;
+//   background-color: #f9f9f9;
+//   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+//   border-radius: 4px;
+//   padding: 20px;
+// }
 
-/* Styling for the dialog title */
-.mat-dialog-title {
-  font-size: 20px;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 16px;
-}
 
-/* Styling for the dialog content */
-.mat-dialog-content {
+// .mat-dialog-title {
+//   font-size: 20px;
+//   font-weight: bold;
+//   color: #333;
+//   margin-bottom: 16px;
+// }
+
+// .mat-dialog-content {
+//   display: flex;
+//   flex-direction: column;
+// }
+
+// .mat-form-field {
+//   margin-bottom: 16px;
+// }
+
+// .mat-form-field-label {
+//   color: #555;
+// }
+
+// .mat-input-element {
+//   border: 1px solid #ccc;
+//   border-radius: 4px;
+//   padding: 8px;
+//   outline: none;
+// }
+
+
+// .mat-dialog-actions button {
+//   padding: 10px 20px;
+//   border: none;
+//   border-radius: 4px;
+//   cursor: pointer;
+//   font-weight: bold;
+// }
+
+
+// .mat-dialog-actions button:last-child {
+//   margin-left: 10px;
+//   background-color: #007bff;
+//   color: #fff;
+// }
+
+
+// .mat-dialog-actions button:first-child {
+//   background-color: #ccc;
+//   color: #333;
+// }
+
+
+// .mat-dialog-actions button:hover {
+//   background-color: #0056b3;
+// }
+
+
+// .mat-dialog-actions button:first-child:hover {
+//   background-color: #b3b3b3;
+// }
+
+.flex {
   display: flex;
-  flex-direction: column;
+  row-gap: 0.5rem;
+  column-gap: 0.4rem;
+  flex-wrap: wrap;
+  max-width: 600px;
 }
 
-/* Styling for the form fields */
-.mat-form-field {
-  margin-bottom: 16px;
-}
-
-/* Styling for the input labels */
-.mat-form-field-label {
-  color: #555;
-}
-
-/* Styling for the input fields */
-.mat-input-element {
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 8px;
-  outline: none;
-}
-
-/* Styling for the "Add" button */
-.mat-dialog-actions button {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-/* Styling for the "Add" button */
-.mat-dialog-actions button:last-child {
-  margin-left: 10px;
-  background-color: #007bff;
-  color: #fff;
-}
-
-/* Styling for the "Cancel" button */
-.mat-dialog-actions button:first-child {
-  background-color: #ccc;
-  color: #333;
-}
-
-/* Styling for the "Add" button on hover */
-.mat-dialog-actions button:hover {
-  background-color: #0056b3;
-}
-
-/* Styling for the "Cancel" button on hover */
-.mat-dialog-actions button:first-child:hover {
-  background-color: #b3b3b3;
-}

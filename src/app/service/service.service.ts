@@ -7,6 +7,7 @@ import { Injectable } from '@angular/core';
 export class ServiceService {
 createurl : string = "http://10.11.10.128:7084/api/create"
 getall : string = "http://10.11.10.128:7084/api/GetAll"
+APIuRL: string = "http://10.11.10.128:7084/api"
   constructor(public http:HttpClient) { }
 
 
@@ -16,5 +17,13 @@ getall : string = "http://10.11.10.128:7084/api/GetAll"
 
   getAll() {
     return this.http.get(this.getall);
+  }
+
+  delete(id:any) {
+    return this.http.delete(`${this.APIuRL}/DeleteElement/${id}`);
+  }
+
+  update(data:any, id:any) {
+    return this.http.put(`${this.APIuRL}/updateFormElement/${id}`, data);
   }
  }

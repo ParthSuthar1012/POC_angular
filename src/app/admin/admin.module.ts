@@ -7,11 +7,13 @@ import { FormsModule,ReactiveFormsModule } from '@angular/forms';
 import { DragDropComponent } from './drag-drop/drag-drop.component'
 import {MatDialogModule} from '@angular/material/dialog';
 import {DragDropModule} from '@angular/cdk/drag-drop';
+import { DataTestComponent } from './dataTest/dataTest.component';
 
 @NgModule({
   declarations: [
     AdminComponent,
-    DragDropComponent
+    DragDropComponent,
+    DataTestComponent
   ],
   imports: [
     CommonModule,
@@ -20,7 +22,8 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
     FormsModule,
     ReactiveFormsModule,
     MatDialogModule,
-    DragDropModule
+    DragDropModule,
+    
   ]
 })
 export class AdminModule { }

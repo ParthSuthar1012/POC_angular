@@ -1,43 +1,137 @@
 <div class="example-container">
-    <h2>Form Elements</h2>
-    <div
-      cdkDropList
-      #todoList="cdkDropList"
-      [cdkDropListData]="todo"
-      [cdkDropListConnectedTo]="[doneList]"
-      class="example-list"
-      (cdkDropListDropped)="drop($event, todoList)"
-    >
-      <div class="example-box" *ngFor="let item of todo" cdkDrag>{{ item.type }}</div>
+  <h2>Form Elements</h2>
+  <div cdkDropList #todoList="cdkDropList" [cdkDropListData]="todo" [cdkDropListConnectedTo]="[doneList]"
+    class="example-list" (cdkDropListDropped)="drop($event, todoList)">
+    <div class="example-box" *ngFor="let item of todo" cdkDrag>
+      {{ item.displayName }}
     </div>
   </div>
-  
-  <div class="example-container">
-    <h2>Done</h2>
-    <div
-      cdkDropList
-      #doneList="cdkDropList"
-      [cdkDropListData]="done"
-      [cdkDropListConnectedTo]="[todoList]"
-      class="example-list"
-      (cdkDropListDropped)="drop($event, doneList)"
-    >
-    <div *ngFor="let item of data; let i = index">
-       
-          <div
-          *ngIf="
-            item.inputType === 'text' ||
-            item.inputType === 'email' ||
-            item.inputType === 'password'
-          "
-        >
-     
-      <label >{{item.label}}</label>
-      <input type="text" [placeholder]="subitem[i].placeholder">
+</div>
+
+<div class="example-container">
+  <h2>From</h2>
+  <div cdkDropList #doneList="cdkDropList" [cdkDropListData]="done" [cdkDropListConnectedTo]="[todoList]"
+    class="example-list drop-box" (cdkDropListDropped)="drop($event, doneList)">
+
+    <div  *ngFor="let item of data; let i = index">
+
+      <!-- For text Input -->
+      <div *ngIf="
+          item.inputType === 'text' ||
+          item.inputType === 'email' ||
+          item.inputType === 'password'
+        " class="input-field" (mouseenter)="toggleButtons(true, i)" (mouseleave)="toggleButtons(false, i)">
+        <mat-form-field appearance="outline">
+          <mat-label>{{ item.label }}</mat-label>
+          <input matInput type="text" [attr.data-elementId]="item.element_Id" [placeholder]="subitem[i].placeholder"
+            [disabled]="isButtonVisible[i]" />
+        </mat-form-field>
+        <div class="buttons-container show" [ngClass]="{ show: isButtonVisible[i] }">
+          <button mat-icon-button color="primary" (click)="editInputField(item)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="deleteInputField(item)">
+            <mat-icon>delete</mat-icon>
+          </button>
         </div>
-       </div>
-    
+      </div>
+      <!-- For Radio Button -->
+      <div class="input-field" *ngIf="item.inputType ==='radio'" (mouseenter)="toggleButtons(true, i)" (mouseleave)="toggleButtons(false, i)">
+        <label>{{item.label}}: </label>  <br/>
+        <mat-radio-group class="grid" [disabled]="isButtonVisible[i]" >
+         
+          <mat-radio-button *ngFor="let radio of subitem[i].options" [value]="radio.value">{{radio.displayName}} </mat-radio-button>
+   
+        </mat-radio-group>
+        <p></p>
+        <div class="buttons-container" [ngClass]="{ show: isButtonVisible[i] }" *ngIf="isButtonVisible[i]">
+          <button mat-icon-button  color="primary" (click)="editInputField(item)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="deleteInputField(item)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+
+      </div>
+
+        <!-- For CheckBox -->
+        <div class="input-field" *ngIf="item.inputType === 'checkbox'" (mouseenter)="toggleButtons(true, i)" (mouseleave)="toggleButtons(false, i)">
+          <label>{{ item.label }}</label>         
+          
+            <p *ngFor="let check of subitem[i].options">
+              <mat-checkbox 
+              >  {{check.displayName}}</mat-checkbox>
+     
+            
+            </p>
+          
+
+        
+         
+          <div class="buttons-container" [ngClass]="{ show: isButtonVisible[i] }" *ngIf="isButtonVisible[i]">
+            <button mat-icon-button color="primary" (click)="editInputField(item)">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="deleteInputField(item)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+
+
+        <!-- For dropdown -->
+        <div class="input-field" *ngIf="item.inputType === 'select'" (mouseenter)="toggleButtons(true, i)" (mouseleave)="toggleButtons(false, i)"> 
+      
+          <mat-form-field appearance="outline">
+            <mat-label>{{item.label}}</mat-label>
+            <mat-select >
+              <mat-option
+                *ngFor="let dv of subitem[i]?.options"
+                [value]="dv?.value"
+                >{{ dv.displayName }}</mat-option
+              >
+            </mat-select>
+          </mat-form-field>
+
+          <div class="buttons-container" [ngClass]="{ show: isButtonVisible[i] }" *ngIf="isButtonVisible[i]">
+            <button mat-icon-button color="primary" (click)="editInputField(item)">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="deleteInputField(item)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="input-field" *ngIf="item.inputType === 'multipleSelect'" (mouseenter)="toggleButtons(true, i)" (mouseleave)="toggleButtons(false, i)"> 
+      
+          <mat-form-field appearance="outline">
+            <mat-label>{{item.label}}</mat-label>
+            <mat-select multiple >
+              <mat-option
+                *ngFor="let dv of subitem[i]?.options"
+                [value]="dv?.value"
+                >{{ dv.displayName }}</mat-option
+              >
+            </mat-select>
+          </mat-form-field>
+
+          <div class="buttons-container" [ngClass]="{ show: isButtonVisible[i] }" *ngIf="isButtonVisible[i]">
+            <button mat-icon-button color="primary" (click)="editInputField(item)">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="deleteInputField(item)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        
     </div>
 
+
+
+
   </div>
- 
+</div>
