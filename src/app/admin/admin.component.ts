@@ -205,6 +205,9 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
         <button mat-raised-button color="primary" (click)="submit()">
           Submit
         </button>
+        <button mat-raised-button color="primary" (click)="Cancel()">
+          Cancel
+        </button>
       </mat-dialog-actions>
       <mat-dialog-content> </mat-dialog-content
     ></mat-dialog-content>
@@ -357,6 +360,10 @@ export class AdminComponent implements OnInit {
     });
 
     this.options.push(newOption);
+  }
+
+  Cancel(){
+    this.dialogRef.close();
   }
 
   submit() {

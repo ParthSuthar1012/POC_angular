@@ -9,6 +9,8 @@ import { MatIconModule} from '@angular/material/icon'
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatRadioModule} from '@angular/material/radio';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatMenuModule} from '@angular/material/menu';
+
 @NgModule({
   declarations: [],
   imports: [
@@ -23,7 +25,8 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
     MatIconModule,
     MatAutocompleteModule,
     MatRadioModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatMenuModule
   ]
 })
 export class MaterialModule { }

@@ -11,6 +11,7 @@ import { InputField } from 'src/app/model/input-field';
 import { config } from 'rxjs';
 import { ServiceService } from 'src/app/service/service.service';
 import { DialogConfig } from '@angular/cdk/dialog';
+import { SaveFormComponent } from '../save-form/save-form.component';
 
 @Component({
   selector: 'app-drag-drop',
@@ -23,12 +24,9 @@ export class DragDropComponent {
   todo: InputField[] = [
     { inputType: 'text', displayName: 'text' },
     { inputType: 'radio', displayName: 'radio' },
-    { inputType: 'password', displayName: 'password' },
-    { inputType: 'email', displayName: 'email' },
     { inputType: 'checkbox', displayName: 'checkbox' },
     { inputType: 'select', displayName: 'dropdown' },
     { inputType: 'multipleSelect', displayName: 'dropdown(Multiple Select)' },
-    { inputType: 'button', displayName: 'button' },
   ];
   data: any[] = [];
   done: any[] = [];
@@ -84,26 +82,25 @@ export class DragDropComponent {
         console.log(result);
         this.service.create(result).subscribe((res: any) => {
           this.data.push(res);
-
           const subitems = JSON.parse(res?.subitems);
           this.subitem.push(subitems);
-
           console.log(this.data);
-        });
-
+        })
         console.log(this.done);
         console.log(this.subitem);
-        this.todo = [
-          { inputType: 'text', displayName: 'text' },
-          { inputType: 'radio', displayName: 'radio' },
-          { inputType: 'password', displayName: 'password' },
-          { inputType: 'email', displayName: 'email' },
-          { inputType: 'checkbox', displayName: 'checkbox' },
-          { inputType: 'select', displayName: 'dropdown' },
-          { inputType: 'multipleSelect', displayName: 'dropdown(Multiple Select)' },
-          { inputType: 'button', displayName: 'button' },
-        ];
+      } 
+      else {
+        console.log(this.done)
+      this.done = []
+      console.log(this.done)
       }
+      this.todo = [
+        { inputType: 'text', displayName: 'text' },
+        { inputType: 'radio', displayName: 'radio' },
+        { inputType: 'checkbox', displayName: 'checkbox' },
+        { inputType: 'select', displayName: 'dropdown' },
+        { inputType: 'multipleSelect', displayName: 'dropdown(Multiple Select)' },
+      ];
     });
   }
 
@@ -123,23 +120,24 @@ export class DragDropComponent {
     const dialogRef = this.dialog.open(AdminComponent, dialogConfig);
 
     dialogRef.afterClosed().subscribe((result:any) => {
-      console.log(result);
-      this.service.update(result,element_Id).subscribe((res:any) => {
-        console.log(res);
-        const index = this.data.findIndex(
-          (obj) => obj.element_Id === element_Id
-        );
-        if (index !== -1) {
-         
-          this.data[index] = res;
-        }
-        const subitems = JSON.parse( res?.subitems)
-        const subitemIndex = this.subitem.findIndex((obj : any) => obj.name === item.name || obj.placeholder == item.placeholder );
-        if (subitemIndex !== -1) {
-          this.subitem[subitemIndex] =subitems;
-        }
 
-      })
+      console.log(result);
+      if(result){
+        this.service.update(result,element_Id).subscribe((res:any) => {
+          console.log(res);
+          const index = this.data.findIndex(
+            (obj) => obj.element_Id === element_Id
+          );
+          if (index !== -1) {
+            this.data[index] = res;
+          }
+          const subitems = JSON.parse( res?.subitems)
+          const subitemIndex = this.subitem.findIndex((obj : any) => obj.name === item.name || obj.placeholder == item.placeholder );
+          if (subitemIndex !== -1) {
+            this.subitem[subitemIndex] =subitems;
+          }
+        })
+      } 
       console.log("new data",this.data)
       console.log("subitems",this.subitem)
     })
@@ -164,5 +162,25 @@ export class DragDropComponent {
         console.error(error);
       }
     );
+  }  
+
+
+
+  submit(){
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = '300px';
+    const dialogRef = this.dialog.open(SaveFormComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe((result:any)=>{
+      const finaldata = {
+        formName : result.formName,
+        Configuration : this.data
+      }
+      this.service.formsubmit(finaldata).subscribe(res => {
+        console.log(res)
+      })
+      console.log(finaldata)
+    })
   }
 }

@@ -1,3 +1,4 @@
+<div class="container">
 <div class="example-container">
   <h2>Form Elements</h2>
   <div cdkDropList #todoList="cdkDropList" [cdkDropListData]="todo" [cdkDropListConnectedTo]="[doneList]"
@@ -24,9 +25,9 @@
         <mat-form-field appearance="outline">
           <mat-label>{{ item.label }}</mat-label>
           <input matInput type="text" [attr.data-elementId]="item.element_Id" [placeholder]="subitem[i].placeholder"
-            [disabled]="isButtonVisible[i]" />
+            />
         </mat-form-field>
-        <div class="buttons-container show" [ngClass]="{ show: isButtonVisible[i] }">
+        <div class="buttons-container show">
           <button mat-icon-button color="primary" (click)="editInputField(item)">
             <mat-icon>edit</mat-icon>
           </button>
@@ -44,7 +45,7 @@
    
         </mat-radio-group>
         <p></p>
-        <div class="buttons-container" [ngClass]="{ show: isButtonVisible[i] }" *ngIf="isButtonVisible[i]">
+        <div class="buttons-container show" >
           <button mat-icon-button  color="primary" (click)="editInputField(item)">
             <mat-icon>edit</mat-icon>
           </button>
@@ -69,7 +70,7 @@
 
         
          
-          <div class="buttons-container" [ngClass]="{ show: isButtonVisible[i] }" *ngIf="isButtonVisible[i]">
+          <div class="buttons-container show">
             <button mat-icon-button color="primary" (click)="editInputField(item)">
               <mat-icon>edit</mat-icon>
             </button>
@@ -94,7 +95,7 @@
             </mat-select>
           </mat-form-field>
 
-          <div class="buttons-container" [ngClass]="{ show: isButtonVisible[i] }" *ngIf="isButtonVisible[i]">
+          <div class="buttons-container show">
             <button mat-icon-button color="primary" (click)="editInputField(item)">
               <mat-icon>edit</mat-icon>
             </button>
@@ -130,8 +131,11 @@
         
     </div>
 
-
+      <div>
+        <button mat-raised-button color="primary" *ngIf="data.length > 0" (click)="submit()" >Save</button>
+      </div>
 
 
   </div>
+</div>
 </div>

@@ -1,0 +1,11 @@
+<form class="example-form" [formGroup]="submitForm">
+  <mat-form-field class="example-full-width">
+    <mat-label>Form Name</mat-label>
+    <input matInput placeholder="Enter Your Form Name" formControlName="formName"/>
+    <mat-error *ngIf="k['formName'].errors?.['required']">
+        formName is required
+      </mat-error>
+  </mat-form-field>
+
+  <button mat-raised-button color="warn"  (click)="submit()">submit</button>
+</form>

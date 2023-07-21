@@ -7,13 +7,18 @@ import { FormsModule,ReactiveFormsModule } from '@angular/forms';
 import { DragDropComponent } from './drag-drop/drag-drop.component'
 import {MatDialogModule} from '@angular/material/dialog';
 import {DragDropModule} from '@angular/cdk/drag-drop';
-import { DataTestComponent } from './dataTest/dataTest.component';
+import { SaveFormComponent } from './save-form/save-form.component';
+import { FormListComponent } from './form-list/form-list.component';
+import {MatTableModule} from '@angular/material/table';
+
 
 @NgModule({
   declarations: [
     AdminComponent,
     DragDropComponent,
-    DataTestComponent
+    SaveFormComponent,
+    FormListComponent,
+   
   ],
   imports: [
     CommonModule,
@@ -23,7 +28,7 @@ import { DataTestComponent } from './dataTest/dataTest.component';
     ReactiveFormsModule,
     MatDialogModule,
     DragDropModule,
-    
+    MatTableModule
   ]
 })
 export class AdminModule { }

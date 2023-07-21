@@ -8,7 +8,7 @@ const routes: Routes = [
       import('./admin/admin.module').then((m) => m.AdminModule),
   },
   {
-    path: 'client',
+    path: 'client/:formId',
     loadChildren: () =>
       import('./client/client.module').then((m) => m.ClientModule),
   },
